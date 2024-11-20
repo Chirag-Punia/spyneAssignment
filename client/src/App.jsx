@@ -45,7 +45,7 @@ function App() {
 }
 
 const InitState = () => {
-    const base_url = " http://localhost:5002";
+    const base_url = " https://spyneassignment-c2vd.onrender.com";
     const setAuth = useSetRecoilState(authState);
     const navigate = useNavigate();
     const location = useLocation();

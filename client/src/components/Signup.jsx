@@ -26,7 +26,7 @@ export default function Signup() {
         }
         setIsLoading(true);
         try {
-            const res = await axios.post(" http://localhost:5002/auth/signup", { name, email, password });
+            const res = await axios.post(" https://spyneassignment-c2vd.onrender.com/auth/signup", { name, email, password });
             localStorage.setItem("token", res.data.token);
             reactNavigator("/home");
             toast.success("Signup Successful!");
@@ -40,7 +40,7 @@ export default function Signup() {
         onSuccess: async (tokenResponse) => {
             try {
 
-                const response = await axios.post(" http://localhost:5002/auth/google-login", {
+                const response = await axios.post(" https://spyneassignment-c2vd.onrender.com/auth/google-login", {
                     token: tokenResponse.access_token,
                 });
 

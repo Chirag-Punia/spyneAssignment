@@ -31,7 +31,7 @@ const Home = () => {
 
     const fetchCars = async () => {
         try {
-            const response = await axios.get("http://localhost:5002/api/cars", {
+            const response = await axios.get("https://spyneassignment-c2vd.onrender.com/api/cars", {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

@@ -31,7 +31,7 @@ const ProductCreation = () => {
         image.forEach((img) => formData.append("images", img));
 
         try {
-            const response = await axios.post("http://localhost:5002/api/cars", formData, {
+            const response = await axios.post("https://spyneassignment-c2vd.onrender.com/api/cars", formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                     "Authorization": `Bearer ${token}`,

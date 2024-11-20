@@ -24,7 +24,7 @@ const ProductDetail = () => {
 
     const fetchCarDetails = async () => {
         try {
-            const response = await axios.get(`http://localhost:5002/api/cars/${carId}`, {
+            const response = await axios.get(`https://spyneassignment-c2vd.onrender.com/api/cars/${carId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -59,7 +59,7 @@ const ProductDetail = () => {
         imageFiles.forEach((file) => formData.append("images", file));
 
         try {
-            await axios.put(`http://localhost:5002/api/cars/${carId}`, formData, {
+            await axios.put(`https://spyneassignment-c2vd.onrender.com/api/cars/${carId}`, formData, {
                 headers: {
                     "Authorization": `Bearer ${token}`,
                     "Content-Type": "multipart/form-data",
@@ -78,7 +78,7 @@ const ProductDetail = () => {
     const handleDelete = async () => {
         setDelLoading(true);
         try {
-            await axios.delete(`http://localhost:5002/api/cars/${carId}`, {
+            await axios.delete(`https://spyneassignment-c2vd.onrender.com/api/cars/${carId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

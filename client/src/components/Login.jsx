@@ -24,7 +24,7 @@ export default function SignInPage() {
         setIsLoading(true);
         setError("");
         try {
-            const response = await axios.post(" http://localhost:5002/auth/login", { email, password });
+            const response = await axios.post(" https://spyneassignment-c2vd.onrender.com/auth/login", { email, password });
 
             if (response.data.token) {
                 localStorage.setItem("token", response.data.token);
@@ -47,7 +47,7 @@ export default function SignInPage() {
     const handleGoogleLogin = useGoogleLogin({
         onSuccess: async (tokenResponse) => {
             try {
-                const response = await axios.post(" http://localhost:5002/auth/google-login", {
+                const response = await axios.post(" https://spyneassignment-c2vd.onrender.com/auth/google-login", {
                     token: tokenResponse.access_token,
                 });
                 if (response.data.token) {
