@@ -8,12 +8,12 @@ import {useNavigate} from "react-router-dom";
 const ProductCreation = () => {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
-    const [image, setImage] = useState([]); // Initialize as an array
+    const [image, setImage] = useState([]);
     const token = localStorage.getItem("token");
     const [isLoading, setIsLoading] = useState(false);
     const navigator = useNavigate();
     const handleImageUpload = (e) => {
-        setImage(Array.from(e.target.files)); // Convert FileList to an array
+        setImage(Array.from(e.target.files));
     };
 
 
@@ -28,7 +28,7 @@ const ProductCreation = () => {
         const formData = new FormData();
         formData.append("title", title);
         formData.append("description", description);
-        image.forEach((img) => formData.append("images", img)); // Add all images
+        image.forEach((img) => formData.append("images", img));
 
         try {
             const response = await axios.post("http://localhost:5002/api/cars", formData, {
@@ -104,7 +104,7 @@ const ProductCreation = () => {
                         id="image"
                         accept="image/*"
                         onChange={handleImageUpload}
-                        multiple // Allow selecting multiple files
+                        multiple
                         className="w-full border rounded-lg px-4 py-2 text-gray-700"
                         required
                     />

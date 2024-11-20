@@ -2,10 +2,10 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const CarCard = ({ car }) => {
-    const navigate = useNavigate(); // useNavigate replaces useHistory
+    const navigate = useNavigate();
 
     const handleViewDetails = () => {
-        // Navigate to the product detail page using the car ID
+       
         navigate(`/product-details/${car._id}`);
     };
 
@@ -17,7 +17,7 @@ const CarCard = ({ car }) => {
                         {car.images.map((image, index) => (
                             <img
                                 key={index}
-                                src={image} // Assuming `car.images` contains URLs
+                                src={image}
                                 alt={`${car.title} - ${index + 1}`}
                                 className="w-full h-32 object-cover rounded-lg"
                             />
@@ -32,7 +32,7 @@ const CarCard = ({ car }) => {
             <div className="flex justify-between items-center">
                 <span className="text-gray-500 text-sm">{car.tags && car.tags.join(", ")}</span>
                 <button
-                    onClick={handleViewDetails} // Redirect to product details
+                    onClick={handleViewDetails}
                     className="bg-purple-700 text-white px-4 py-2 rounded-lg transition duration-300 transform hover:scale-105"
                 >
                     View Details

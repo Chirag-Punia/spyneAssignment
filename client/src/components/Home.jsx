@@ -4,7 +4,7 @@ import Header from "./Header";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import CarCard from "./CarCard.jsx"; // Assuming CarCard is already created
+import CarCard from "./CarCard.jsx";
 
 const Home = () => {
     const navigate = useNavigate();
@@ -37,7 +37,7 @@ const Home = () => {
                 },
             });
             setCars(response.data);
-            setFilteredCars(response.data); // Initially show all cars
+            setFilteredCars(response.data);
         } catch (error) {
             console.error("Error fetching cars:", error);
         }

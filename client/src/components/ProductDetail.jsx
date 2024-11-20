@@ -5,12 +5,12 @@ import { toast } from "react-toastify";
 import { Button } from "@nextui-org/button";
 
 const ProductDetail = () => {
-    const { carId } = useParams(); // Get the car ID from the URL
+    const { carId } = useParams();
     const [carDetails, setCarDetails] = useState(null);
     const [editDetails, setEditDetails] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [isEditing, setIsEditing] = useState(false); // Toggle for editing mode
-    const [imageFiles, setImageFiles] = useState([]); // For storing uploaded image files
+    const [isEditing, setIsEditing] = useState(false);
+    const [imageFiles, setImageFiles] = useState([]);
     const [delLoading, setDelLoading] = useState(false);
     const [saveLoading, setSaveLoading] = useState(false);
     const token = localStorage.getItem("token");
@@ -30,7 +30,7 @@ const ProductDetail = () => {
                 },
             });
             setCarDetails(response.data[0]);
-            setEditDetails(response.data[0]); // Initialize editDetails with carDetails
+            setEditDetails(response.data[0]);
             setLoading(false);
         } catch (error) {
             console.error("Error fetching car details:", error);
@@ -41,12 +41,12 @@ const ProductDetail = () => {
         const { name, value } = e.target;
         setEditDetails((prev) => ({
             ...prev,
-            [name]: name === "tags" ? value.split(",") : value, // Split tags into an array
+            [name]: name === "tags" ? value.split(",") : value,
         }));
     };
 
     const handleImageChange = (e) => {
-        const files = Array.from(e.target.files); // Allow multiple file selection
+        const files = Array.from(e.target.files);
         setImageFiles(files);
     };
 
@@ -56,17 +56,17 @@ const ProductDetail = () => {
         formData.append("title", editDetails?.title || "");
         formData.append("description", editDetails?.description || "");
         formData.append("tags", editDetails?.tags?.join(",") || "");
-        imageFiles.forEach((file) => formData.append("images", file)); // Append multiple files
+        imageFiles.forEach((file) => formData.append("images", file));
 
         try {
             await axios.put(`http://localhost:5002/api/cars/${carId}`, formData, {
                 headers: {
                     "Authorization": `Bearer ${token}`,
-                    "Content-Type": "multipart/form-data", // Tell axios we are sending form data
+                    "Content-Type": "multipart/form-data",
                 },
             });
-            setCarDetails(editDetails); // Update the details after save
-            setIsEditing(false); // Exit editing mode
+            setCarDetails(editDetails);
+            setIsEditing(false);
             setSaveLoading(false);
             toast.success("Product updated successfully!");
             navigator("/home");
