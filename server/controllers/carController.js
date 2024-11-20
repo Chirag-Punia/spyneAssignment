@@ -8,15 +8,17 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+
 const createCar = async (req, res) => {
     try {
         const { title, description, tags } = req.body;
+
 
         if (!req.files || req.files.length === 0) {
             return res.status(400).json({ message: "No images uploaded" });
         }
 
-        // Upload each image to Cloudinary
+
         const uploadPromises = req.files.map((file) =>
             cloudinary.uploader.upload(file.path, { folder: "cars" })
         );
@@ -24,11 +26,12 @@ const createCar = async (req, res) => {
 
         const imageUrls = uploadResults.map((result) => result.secure_url);
 
+
         const car = await Car.create({
             title,
             description,
             tags: tags ? tags.split(",") : [],
-            images: imageUrls, // Save array of image URLs
+            images: imageUrls,
             user: req.headers.userId,
         });
 
@@ -36,6 +39,41 @@ const createCar = async (req, res) => {
     } catch (error) {
         console.error("Error creating car:", error);
         res.status(500).json({ message: "Failed to create car" });
+    }
+};
+
+
+const updateCar = async (req, res) => {
+    try {
+        const { title, description, tags } = req.body;
+
+        const car = await Car.findById(req.params.id);
+
+        if (car && car.user.toString() === req.headers.userId.toString()) {
+            car.title = title || car.title;
+            car.description = description || car.description;
+            car.tags = tags ? tags.split(",") : car.tags;
+
+            if (req.files && req.files.length > 0) {
+                const uploadPromises = req.files.map((file) =>
+                    cloudinary.uploader.upload(file.path, { folder: "cars" })
+                );
+                const uploadResults = await Promise.all(uploadPromises);
+
+                const imageUrls = uploadResults.map((result) => result.secure_url);
+
+
+                car.images.push(...imageUrls);
+            }
+
+            const updatedCar = await car.save();
+            res.json(updatedCar);
+        } else {
+            res.status(404).json({ message: "Car not found or not authorized" });
+        }
+    } catch (error) {
+        console.error("Error updating car:", error);
+        res.status(500).json({ message: "Failed to update car" });
     }
 };
 
@@ -85,42 +123,18 @@ const getCarById = async (req, res) => {
     }
 };
 
-const updateCar = async (req, res) => {
-    try {
-        const { title, description, tags } = req.body;
-        const car = await Car.findById(req.params.id);
-        if (car && car.user.toString() === req.headers.userId.toString()) {
-            car.title = title || car.title;
-            car.description = description || car.description;
-            car.tags = tags || car.tags;
-
-           
-            if (req.file) {
-                const result = await cloudinary.uploader.upload(req.file.path, {
-                    folder: "cars",
-                });
-                car.images = result.secure_url;
-            }
-
-            const updatedCar = await car.save();
-            res.json(updatedCar);
-        } else {
-            res.status(404).json({ message: "Car not found or not authorized" });
-        }
-    } catch (error) {
-        console.error("Error updating car:", error);
-        res.status(500).json({ message: "Failed to update car" });
-    }
-};
 
 const deleteCar = async (req, res) => {
     try {
         const car = await Car.findById(req.params.id);
 
         if (car && car.user.toString() === req.headers.userId.toString()) {
-           
-            const publicId = car.images.split("/").pop().split(".")[0];
-            await cloudinary.uploader.destroy(`cars/${publicId}`);
+
+            const deletePromises = car.images.map((url) => {
+                const publicId = url.split("/").pop().split(".")[0];
+                return cloudinary.uploader.destroy(`cars/${publicId}`);
+            });
+            await Promise.all(deletePromises);
 
             await car.remove();
             res.json({ message: "Car removed" });
@@ -132,5 +146,6 @@ const deleteCar = async (req, res) => {
         res.status(500).json({ message: "Failed to delete car" });
     }
 };
+
 
 module.exports = { createCar, getCars, searchCars, getCarById, updateCar, deleteCar };
