@@ -12,22 +12,23 @@ const createCar = async (req, res) => {
     try {
         const { title, description, tags } = req.body;
 
-       
-        if (!req.file) {
-            return res.status(400).json({ message: "No image uploaded" });
+        if (!req.files || req.files.length === 0) {
+            return res.status(400).json({ message: "No images uploaded" });
         }
 
-       
-        const result = await cloudinary.uploader.upload(req.file.path, {
-            folder: "cars",
-        });
+        // Upload each image to Cloudinary
+        const uploadPromises = req.files.map((file) =>
+            cloudinary.uploader.upload(file.path, { folder: "cars" })
+        );
+        const uploadResults = await Promise.all(uploadPromises);
 
-       
+        const imageUrls = uploadResults.map((result) => result.secure_url);
+
         const car = await Car.create({
             title,
             description,
             tags: tags ? tags.split(",") : [],
-            images: result.secure_url,
+            images: imageUrls, // Save array of image URLs
             user: req.headers.userId,
         });
 
@@ -37,6 +38,7 @@ const createCar = async (req, res) => {
         res.status(500).json({ message: "Failed to create car" });
     }
 };
+
 
 
 const getCars = async (req, res) => {

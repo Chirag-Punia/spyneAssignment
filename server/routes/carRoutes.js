@@ -14,13 +14,13 @@ const router = express.Router();
 
 router.get("/", protect, getCars);
 
-router.post("/",protect,upload.single("image"), createCar);
+router.post("/",protect,upload.array("images", 10), createCar);
 
 router.get("/search", protect, searchCars);
 
 router.get("/:id", protect, getCarById);
 
-router.put("/:id", protect,upload.single("image"), updateCar);
+router.put("/:id", protect,upload.array("images", 10), updateCar);
 
 router.delete("/:id", protect, deleteCar);
 

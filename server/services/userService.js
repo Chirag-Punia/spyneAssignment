@@ -49,7 +49,7 @@ const googleLogin = async (token) => {
         throw new Error("Email is registered with a different method");
     }
 
-    const jwtToken = jwt.sign({ id: userInstance._id }, process.env.JWT_SECRET, {
+    const jwtToken = jwt.sign({ id: userInstance._id }, SECRET, {
         expiresIn: "1h",
     });
     return { token: jwtToken, user: { name, email } };
